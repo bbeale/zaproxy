@@ -78,6 +78,7 @@ Scanners:
 10060	Http Parameter Pollution (Server Side)
 10061   Server Leaks Information via "X-AspNet-Version"/"X-AspNetMvc-Version" HTTP Response Header Field(s)
 10062   Server Leaks PII in response body
+10063   Feature Policy Scanner
 10070   Use of SAML
 10094   Base64 Disclosure
 10095   Backup File Disclosure
@@ -95,6 +96,7 @@ Scanners:
 10106   Http Only Site
 10107   Httpoxy - Proxy Header Misuse
 10108   Blank link target
+10109   Modern Web Application (info)
 
 10200   Beast (via HTTPS Info Extension)
 10201   Crime (via HTTPS Info Extension)
@@ -157,6 +159,7 @@ Scanners:
 40032   .htaccess Scanner
 40033	NoSQL Injection MongoDB
 40034   .env File Scanner
+40035   Hidden File Scanner
 
 50000   Active Scan scripts
 50001   Passive Scan scripts
@@ -173,6 +176,8 @@ Scanners:
 60200   HUD tutorial examples
 
 90001   Insecure JSF ViewState
+90002   Java Serialized Object
+90003   Subresource Integrity Attribute Missing
 90011   Charset Mismatch
 90017	XSLT Injection
 90018   SQL Injection SQLMap
@@ -189,9 +194,22 @@ Scanners:
 90029   SOAP XML Injection
 90030   WSDL File Detection
 90033   Loosely Scoped Cookie
+90034   Cloud Metadata Attack
+90035   Server Side Template Injection
+90036   Server Side Template Injection (Blind)
 
 100000  Client/Server HTTP Error Response Codes [Script]
 100001  Unexpected Content Types [Script]
+
+110000  Websocket Passive Scan scripts
+110001  Application Error Disclosure [Script]
+110002  Base64 Disclosure [Script]
+110003  Debug Error Disclosure [Script]
+110004  Email Disclosure [Script]
+110005  Credit Card Disclosure [Script]
+110006  Private IP Disclosure [Script]
+110007  Username Disclosure [Script]
+110008  Suspicious XML Comments Disclosure [Script]
 
 322420463 Retire.js
 

@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -q -y --fix-missing \
 	autoconf \
 	gcc g++ \
 	openjdk-8-jdk \
-	ruby \
 	wget \
 	curl \
 	xmlstarlet \
@@ -19,16 +18,16 @@ RUN apt-get update && apt-get install -q -y --fix-missing \
 	openbox \
 	xterm \
 	net-tools \
-	ruby-dev \
 	python-pip \
+	python3-pip \
 	firefox \
 	xvfb \
 	x11vnc && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
-RUN gem install zapr
 RUN pip install --upgrade pip zapcli python-owasp-zap-v2.4
+RUN pip3 install --upgrade pip zapcli python-owasp-zap-v2.4
 
 RUN useradd -d /home/zap -m -s /bin/bash zap
 RUN echo zap:zap | chpasswd
@@ -46,7 +45,7 @@ RUN curl -s https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersio
 	cp -R ZAP*/* . &&  \
 	rm -R ZAP* && \
 	# Setup Webswing
-	curl -s -L https://bitbucket.org/meszarv/webswing/downloads/webswing-2.5.5-distribution.zip > webswing.zip && \
+	curl -s -L https://bitbucket.org/meszarv/webswing/downloads/webswing-2.5.10.zip > webswing.zip && \
 	unzip webswing.zip && \
 	rm webswing.zip && \
 	mv webswing-* webswing && \
@@ -64,17 +63,17 @@ ENV ZAP_PATH /zap/zap.sh
 ENV ZAP_PORT 8080
 ENV HOME /home/zap/
 
-COPY zap* /zap/
+COPY zap* CHANGELOG.md /zap/
 COPY webswing.config /zap/webswing/
 COPY policies /home/zap/.ZAP/policies/
+# The scan script loads the scripts from dev home dir.
+COPY scripts /home/zap/.ZAP_D/scripts/
 COPY .xinitrc /home/zap/
 
 #Copy doesn't respect USER directives so we need to chown and to do that we need to be root
 USER root
 
-RUN chown zap:zap /zap/zap-x.sh && \
-	chown zap:zap /zap/zap-baseline.py && \
-	chown zap:zap /zap/zap-webswing.sh && \
+RUN chown zap:zap /zap/* && \
 	chown zap:zap /zap/webswing/webswing.config && \
 	chown zap:zap -R /home/zap/.ZAP/ && \
 	chown zap:zap /home/zap/.xinitrc && \

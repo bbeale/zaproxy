@@ -70,7 +70,7 @@ config_msg = {}
 out_of_scope_dict = {}
 min_level = 0
 
-# Scan rules that aren't really relevant, eg the examples rules in the alpha set
+# Scan rules that aren't really relevant, e.g. the examples rules in the alpha set
 blacklist = ['-1', '50003', '60000', '60001']
 
 # Scan rules that are being addressed
@@ -83,7 +83,7 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 
 def usage():
     print('Usage: zap-api-scan.py -t <target> -f <format> [options]')
-    print('    -t target         target API definition, OpenAPI or SOAP, local file or URL, eg https://www.example.com/openapi.json')
+    print('    -t target         target API definition, OpenAPI or SOAP, local file or URL, e.g. https://www.example.com/openapi.json')
     print('    -f format         either openapi or soap')
     print('Options:')
     print('    -h                print this help message')
@@ -103,6 +103,7 @@ def usage():
     print('    -n context_file   context file which will be loaded prior to scanning the target')
     print('    -p progress_file  progress file which specifies issues that are being addressed')
     print('    -s                short output format - dont show PASSes or example URLs')
+    print('    -S                safe mode this will skip the active scan and perform a baseline scan')
     print('    -T                max time in minutes to wait for ZAP to start and the passive scan to run')
     print('    -O                the hostname to override in the (remote) OpenAPI spec')
     print('    -z zap_options    ZAP command line options e.g. -z "-config aaa=bbb -config ccc=ddd"')
@@ -133,6 +134,7 @@ def main(argv):
     host_override = ''
     format = ''
     zap_alpha = False
+    baseline = False
     info_unspecified = False
     base_dir = ''
     zap_ip = 'localhost'
@@ -150,7 +152,7 @@ def main(argv):
     fail_inprog_count = 0
 
     try:
-        opts, args = getopt.getopt(argv, "t:f:c:u:g:m:n:r:J:w:x:l:hdaijp:sz:P:D:T:O:", ["hook="])
+        opts, args = getopt.getopt(argv, "t:f:c:u:g:m:n:r:J:w:x:l:hdaijSp:sz:P:D:T:O:", ["hook="])
     except getopt.GetoptError as exc:
         logging.warning('Invalid option ' + exc.opt + ' : ' + exc.msg)
         usage()
@@ -204,6 +206,8 @@ def main(argv):
             zap_options = arg
         elif opt == '-s':
             detailed_output = False
+        elif opt == '-S':
+            baseline = True
         elif opt == '-T':
             timeout = int(arg)
         elif opt == '-O':
@@ -417,7 +421,8 @@ def main(argv):
                     # Dont bother checking the result - this will fail for pscan rules
                     zap.ascan.set_scanner_alert_threshold(id=scanner, alertthreshold='OFF', scanpolicyname=scan_policy)
 
-        zap_active_scan(zap, target, scan_policy)
+        if not baseline:
+            zap_active_scan(zap, target, scan_policy)
 
         zap_wait_for_passive_scan(zap, timeout * 60)
 
@@ -487,19 +492,19 @@ def main(argv):
                         print('SKIP: ' + rule.get('name') + ' [' + plugin_id + ']')
 
             # print out the ignored rules
-            ignore_count, not_used = print_rules(alert_dict, 'IGNORE', config_dict, config_msg, min_level,
+            ignore_count, not_used = print_rules(zap, alert_dict, 'IGNORE', config_dict, config_msg, min_level,
                 inc_ignore_rules, True, detailed_output, {})
 
             # print out the info rules
-            info_count, not_used = print_rules(alert_dict, 'INFO', config_dict, config_msg, min_level,
+            info_count, not_used = print_rules(zap, alert_dict, 'INFO', config_dict, config_msg, min_level,
                 inc_info_rules, info_unspecified, detailed_output, in_progress_issues)
 
             # print out the warning rules
-            warn_count, warn_inprog_count = print_rules(alert_dict, 'WARN', config_dict, config_msg, min_level,
+            warn_count, warn_inprog_count = print_rules(zap, alert_dict, 'WARN', config_dict, config_msg, min_level,
                 inc_warn_rules, not info_unspecified, detailed_output, in_progress_issues)
 
             # print out the failing rules
-            fail_count, fail_inprog_count = print_rules(alert_dict, 'FAIL', config_dict, config_msg, min_level,
+            fail_count, fail_inprog_count = print_rules(zap, alert_dict, 'FAIL', config_dict, config_msg, min_level,
                 inc_fail_rules, True, detailed_output, in_progress_issues)
 
             if report_html:

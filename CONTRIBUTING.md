@@ -36,7 +36,7 @@ You can help translate the ZAP User Guide via the [Crowdin owasp-zap-help](https
 For information about the ZAP Evangelists and how to join up see the [ZAP Evangelists wiki page](https://github.com/zaproxy/zaproxy/wiki/ZapEvangelists)
 
 ## Help Improve the Documentation
-The source for the ZAP [User Guide](https://github.com/zaproxy/zap-core-help/wiki) is underneath the zap-core-tree repo [src/help/zaphelp/contents](https://github.com/zaproxy/zap-core-help/tree/master/src/help/zaphelp/contents) directory.
+The source for the ZAP [User Guide](https://github.com/zaproxy/zap-core-help/wiki) is underneath the zap-core-tree repo [addOns/help/src/main/javahelp/contents](https://github.com/zaproxy/zap-core-help/tree/master/addOns/help/src/main/javahelp/contents) directory.
 
 The Java Help included with ZAP and the online version are both generated from these HTML pages. Send Pull Requests to help us improve it.
 
@@ -48,6 +48,7 @@ The following resources may assist you to that end:
 ## Coding
 
 There's always lots of coding to be done! So much so that we've split it into different categories.
+Refer to [BUILDING] on how to build and run ZAP.
 
 All code should follow the [Development Rules and Guidelines](https://github.com/zaproxy/zaproxy/wiki/DevGuidelines).
 
@@ -74,6 +75,17 @@ The ZAP 'core' underpins all of the other ZAP features, and so ensuring it is as
 Fixing [issues](https://github.com/zaproxy/zaproxy/issues) is very valuable (ones flagged as [IdealFirstBug](https://github.com/zaproxy/zaproxy/issues?q=is%3Aopen+is%3Aissue+label%3AIdealFirstBug) are good ones to start on) and there are always many core improvements we want to make.
 
 #### Guidelines for Pull Request (PR) submission and processing:
+
+##### Developer Certificate of Origin
+
+The Git commits must be [signed off] to indicate your agreement with [Developer Certificate of Origin].
+
+##### Format/Style Java Code
+
+The Java code is formatted according to Google Java Style (AOSP variant). The build automatically checks
+that the code conforms to the style (using [Spotless], which delegates to [google-java-format]), it can
+also be used to format the code (with the Gradle task `spotlessApply`) if the IDE/editor in use
+does not support it.
 
 ##### What should you, the author of a pull request, expect from us (ZAP Team)?
 * How much time (maximum) until the first feedback? 1 week.
@@ -102,3 +114,9 @@ Fixing [issues](https://github.com/zaproxy/zaproxy/issues) is very valuable (one
 * The PR author can optionally specify any reviewer they would like to review their PR and any member of the Core Team can add themselves as a reviewer. This will effectively prevent the PR from being merged until they approve it.
 * Any member of the Core Team can merge a PR as long as the above conditions are met.
 * Reviews by people outside of the Core Team are still appreciated :)
+
+[BUILDING]: BUILDING.md
+[signed off]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--s
+[Developer Certificate of Origin]: https://developercertificate.org/
+[Spotless]: https://github.com/diffplug/spotless
+[google-java-format]: https://github.com/google/google-java-format

@@ -1,11 +1,11 @@
 # [![](https://raw.githubusercontent.com/wiki/zaproxy/zaproxy/images/zap32x32.png) OWASP ZAP](https://www.owasp.org/index.php/ZAP)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![GitHub release](https://img.shields.io/github/release/zaproxy/zaproxy.svg)](https://github.com/zaproxy/zaproxy/wiki/Downloads)
-[![Build Status](https://travis-ci.org/zaproxy/zaproxy.svg?branch=develop)](https://travis-ci.org/zaproxy/zaproxy)
+[![Build Status](https://travis-ci.com/zaproxy/zaproxy.svg?branch=develop)](https://travis-ci.com/zaproxy/zaproxy)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/24/badge)](https://bestpractices.coreinfrastructure.org/projects/24)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/5559/badge.svg)](https://scan.coverity.com/projects/zaproxy-zaproxy)
 [![Github Releases](https://img.shields.io/github/downloads/zaproxy/zaproxy/latest/total.svg?maxAge=2592000)](https://zapbot.github.io/zap-mgmt-scripts/downloads.html)
-[![Javadocs](https://javadoc.io/badge/org.zaproxy/zap/2.7.0.svg)](https://javadoc.io/doc/org.zaproxy/zap/2.7.0)
+[![Javadocs](https://javadoc.io/badge/org.zaproxy/zap/2.8.0.svg)](https://javadoc.io/doc/org.zaproxy/zap/2.8.0)
 [![OWASP Flagship](https://img.shields.io/badge/owasp-flagship-brightgreen.svg)](https://www.owasp.org/index.php/OWASP_Project_Inventory#tab=Flagship_Projects)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/zaproxy/zaproxy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zaproxy/zaproxy/context:java)
 [![Twitter Follow](https://img.shields.io/twitter/follow/zaproxy.svg?style=social&label=Follow&maxAge=2592000)](https://twitter.com/zaproxy)
@@ -17,31 +17,42 @@ The OWASP Zed Attack Proxy (ZAP) is one of the world’s most popular free secur
 
 #### Please help us to make ZAP even better for you by answering the [ZAP User Questionnaire](https://docs.google.com/forms/d/1-k-vcj_sSxlil6XLxCFade-m-IQVeE2h9gduA-2ZPPA/viewform)!
 
-For general information about ZAP:
+#### ZAP in Ten - Video series
+An ongoing series of up to 10 minute videos about ZAP, starting with the basics. 
+
+The first episode and the full series are available via:
+
+[![](https://raw.githubusercontent.com/wiki/zaproxy/zaproxy/images/01-ZAP-in-Ten.png)](http://play.sonatype.com/watch/RyTy22GZV6UccW41UCghC8?)
+
+[![](https://raw.githubusercontent.com/wiki/zaproxy/zaproxy/images/02-ZAP-in-Ten.png)](https://www.alldaydevops.com/zap-in-ten)
+
+
+### For general information about ZAP:
   * [Home page](https://www.owasp.org/index.php/ZAP) - the official ZAP page on the OWASP wiki (includes a donate button;)
   * [Twitter](https://twitter.com/zaproxy)	- official ZAP announcements (low volume)
   * [Blog](https://zaproxy.blogspot.com/)	- official ZAP blog
   * [Monthly Newsletters](https://github.com/zaproxy/zaproxy/wiki/Newsletters) - ZAP news, tutorials, 3rd party tools and featured contributors
   * [Swag!](https://github.com/zaproxy/zap-swag) - official ZAP swag that you can buy, as well as all of the original artwork released under the CC License
 
-For help using ZAP:
-  * [Getting Started Guide (pdf)](https://github.com/zaproxy/zaproxy/releases/download/2.7.0/ZAPGettingStartedGuide-2.7.pdf) - an introductory guide you can print
+### For help using ZAP:
+  * [Getting Started Guide (pdf)](https://github.com/zaproxy/zaproxy/releases/download/v2.8.0/ZAPGettingStartedGuide-2.8.pdf) - an introductory guide you can print
   * [Tutorial Videos](https://www.youtube.com/playlist?list=PLEBitBW-Hlsv8cEIUntAO8st2UGhmrjUB)
   * [Articles](https://github.com/zaproxy/zaproxy/wiki/ZAP-Articles) - that go into ZAP features in more depth
   * [Frequently Asked Questions](https://github.com/zaproxy/zaproxy/wiki/FAQtoplevel)
   * [User Guide](https://github.com/zaproxy/zap-core-help/wiki) - online version of the User Guide included with ZAP
   * [User Group](https://groups.google.com/group/zaproxy-users) - ask questions about using ZAP
-  * IRC: irc.mozilla.org #websectools (eg [using Mibbit](http://chat.mibbit.com/?server=irc.mozilla.org%3A%2B6697&channel=%23websectools)) - chat with core ZAP developers (European office hours usually best)
+  * [ZAP API](https://www.zaproxy.org/docs/api/) - comprehensive documentation on how to use the ZAP API
+  * IRC: chat.freenode.net #zaproxy (e.g. using [freenode webchat](https://webchat.freenode.net/#zaproxy)) - chat with core ZAP developers (European office hours usually best)
   * [Add-ons](https://github.com/zaproxy/zap-extensions/wiki) - help for the optional add-ons you can install
   * [StackOverflow](https://stackoverflow.com/questions/tagged/zap) - because some people use this for everything ;)
 
-Information about the official ZAP Jenkins plugin:
+### Information about the official ZAP Jenkins plugin:
   * [Wiki](https://wiki.jenkins-ci.org/display/JENKINS/zap+plugin)
   * [Group](https://groups.google.com/forum/#%21forum/zaproxy-jenkins)
   * [Issue tracker](https://issues.jenkins-ci.org/issues/?jql=project%20%3D%20JENKINS%20AND%20component%20%3D%20zap-plugin)
   * [Source code](https://github.com/jenkinsci/zap-plugin)
 
-To learn more about ZAP development:
+### To learn more about ZAP development:
   * [Source Code](https://github.com/zaproxy) - for all of the ZAP related projects
   * [Wiki](https://github.com/zaproxy/zaproxy/wiki/Introduction) - lots of detailed info
   * [Developer Group](https://groups.google.com/group/zaproxy-develop) - ask questions about the ZAP internals
