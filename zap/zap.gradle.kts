@@ -17,8 +17,8 @@ plugins {
 }
 
 group = "org.zaproxy"
-version = "2.9.0-SNAPSHOT"
-val versionBC = "2.8.0"
+version = "2.10.0-SNAPSHOT"
+val versionBC = "2.9.0"
 
 val versionLangFile = "1"
 val creationDate by extra { project.findProperty("creationDate") ?: LocalDate.now().toString() }
@@ -73,13 +73,23 @@ dependencies {
         setTransitive(false)
     }
 
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.25.1")
-    testImplementation("junit:junit:4.11")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:2.25.1") {
+        // Not needed.
+        exclude(group = "org.junit")
+    }
     testImplementation("org.hamcrest:hamcrest-all:1.3")
-    testImplementation("org.mockito:mockito-core:3.1.0")
+    val jupiterVersion = "5.5.2"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.1.0")
     testImplementation("org.slf4j:slf4j-log4j12:1.7.28")
 
     testRuntimeOnly(files(distDir))
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }
 
 tasks.register<JavaExec>("run") {
@@ -117,32 +127,6 @@ val japicmp by tasks.registering(JapicmpTask::class) {
     oldClasspath = files(zapJar(versionBC))
     newClasspath = files(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME).map { it.archivePath })
     ignoreMissingClasses = true
-    packageExcludes = listOf(
-        // Should no longer be in use by any add-on
-        "org.parosproxy.paros.extension.filter"
-    )
-    classExcludes = listOf(
-        // Not expected to be used by add-ons
-        "org.parosproxy.paros.view.LicenseFrame",
-        "org.zaproxy.zap.view.LicenseFrame"
-    )
-    fieldExcludes = listOf(
-        // Not expected to be used by add-ons
-        "org.parosproxy.paros.Constant#ACCEPTED_LICENSE",
-        "org.parosproxy.paros.Constant#ACCEPTED_LICENSE_DEFAULT"
-    )
-    methodExcludes = listOf(
-        // Implementation moved to interface
-        "org.parosproxy.paros.extension.ExtensionAdaptor#getURL()",
-        "org.parosproxy.paros.extension.ExtensionAdaptor#getAuthor()",
-        // Not expected to be used by add-ons
-        "org.zaproxy.zap.extension.autoupdate.ExtensionAutoUpdate#getLatestVersionInfo(org.zaproxy.zap.extension.autoupdate.CheckForUpdateCallback)",
-        "org.zaproxy.zap.extension.autoupdate.ManageAddOnsDialog#checkForUpdates()",
-        // Safe default method
-        "org.parosproxy.paros.core.scanner.ScannerListener#filteredMessage(org.parosproxy.paros.network.HttpMessage,java.lang.String)",
-        // Internal API
-        "org.zaproxy.zap.extension.ascan.ActiveScanPanel#getWorkPanel()"
-    )
 
     richReport {
         destinationDir = file("$buildDir/reports/japicmp/")
