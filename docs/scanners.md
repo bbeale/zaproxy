@@ -31,7 +31,7 @@ Scanners:
 10013   Weak HTTP authentication over an unsecured connection [Deprecated]
 10014   Cross Site Request Forgery [Deprecated]
 10015   Incomplete or no cache-control and pragma HTTPHeader set
-10016   Web Browser XSS Protection Not Enabled
+10016   Web Browser XSS Protection Not Enabled [Deprecated]
 10017   Cross-domain JavaScript source file inclusion
 10018   Untrusted domains in JavaScript source code
 10019   Content-Type header missing
@@ -61,7 +61,7 @@ Scanners:
 10043   User controllable javascript event (XSS)
 10044   Big Redirect Response
 10045   Source Code Disclosure - WEB-INF folder
-10046   Insecure Component
+10046   Insecure Component [Deprecated]
 10047   HTTPS Content Available via HTTP
 10048   ShellShock
 10049   Cacheability and Retrievability Content
@@ -220,7 +220,7 @@ Scanners:
 100019  Information Leak - Server Header [Script]
 100020  SQL Injection Detection [Script]
 100021  Telerik Cryptographic Weakness [Script]
-100022  Upload Form Descovery [Script]
+100022  Upload Form Discovery [Script]
 100023  Information Leak - X-Powered-By Header [Script]
 
 110000  Websocket Passive Scan scripts
