@@ -55,6 +55,7 @@ import org.parosproxy.paros.db.TableAlert;
 import org.parosproxy.paros.db.TableContext;
 import org.parosproxy.paros.db.TableHistory;
 import org.parosproxy.paros.db.TableParam;
+import org.parosproxy.paros.db.TablePassiveScan;
 import org.parosproxy.paros.db.TableScan;
 import org.parosproxy.paros.db.TableSession;
 import org.parosproxy.paros.db.TableSessionUrl;
@@ -75,6 +76,8 @@ public class ParosDatabase extends AbstractDatabase {
     private TableSessionUrl tableSessionUrl = null;
     // ZAP: Added TableParam.
     private TableParam tableParam = null;
+    // ZAP: Added TablePassiveScan.
+    private TablePassiveScan tablePassiveScan = null;
     private TableContext tableContext = null;
     private TableStructure tableStructure = null;
 
@@ -99,6 +102,8 @@ public class ParosDatabase extends AbstractDatabase {
         tableSessionUrl = new ParosTableSessionUrl();
         // ZAP: Added statement.
         tableParam = new ParosTableParam();
+        // ZAP: Added statement.
+        tablePassiveScan = new ParosTablePassiveScan();
         tableContext = new ParosTableContext();
         tableStructure = new ParosTableStructure();
 
@@ -109,6 +114,7 @@ public class ParosDatabase extends AbstractDatabase {
         internalDatabaseListeners.add(tableTag);
         internalDatabaseListeners.add(tableSessionUrl);
         internalDatabaseListeners.add(tableParam);
+        internalDatabaseListeners.add(tablePassiveScan);
         internalDatabaseListeners.add(tableContext);
         internalDatabaseListeners.add(tableStructure);
     }
@@ -286,6 +292,24 @@ public class ParosDatabase extends AbstractDatabase {
     @Override
     public TableParam getTableParam() {
         return tableParam;
+    }
+
+    // ZAP: Added method.
+    /* (non-Javadoc)
+     * @see org.parosproxy.paros.db.DatabaseIF#getTablePassiveScan(org.parosproxy.paros.db.TablePassiveScan)
+     */
+    @Override
+    public TablePassiveScan getTablePassiveScan() {
+        return tablePassiveScan;
+    }
+
+    // ZAP: Added method.
+    /* (non-Javadoc)
+     * @see org.parosproxy.paros.db.DatabaseIF#setTablePassiveScan()
+     */
+    @Override
+    public void setTablePassiveScan(TablePassiveScan tablePassiveScan) {
+        this.tablePassiveScan = tablePassiveScan;
     }
 
     /* (non-Javadoc)

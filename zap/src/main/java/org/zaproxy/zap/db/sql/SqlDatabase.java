@@ -29,6 +29,7 @@ import org.parosproxy.paros.db.TableAlert;
 import org.parosproxy.paros.db.TableContext;
 import org.parosproxy.paros.db.TableHistory;
 import org.parosproxy.paros.db.TableParam;
+import org.parosproxy.paros.db.TablePassiveScan;
 import org.parosproxy.paros.db.TableScan;
 import org.parosproxy.paros.db.TableSession;
 import org.parosproxy.paros.db.TableSessionUrl;
@@ -45,6 +46,7 @@ public class SqlDatabase extends AbstractDatabase {
     private TableTag tableTag = null;
     private TableSessionUrl tableSessionUrl = null;
     private TableParam tableParam = null;
+    private TablePassiveScan tablePassiveScan = null;
     private TableContext tableContext = null;
     private TableStructure tableStructure = null;
     /**
@@ -61,6 +63,7 @@ public class SqlDatabase extends AbstractDatabase {
         tableContext = new SqlTableContext();
         tableHistory = new SqlTableHistory();
         tableParam = new SqlTableParam();
+        tablePassiveScan = new SqlTablePassiveScan();
         tableScan = new SqlTableScan();
         tableSession = new SqlTableSession();
         tableSessionUrl = new SqlTableSessionUrl();
@@ -75,6 +78,7 @@ public class SqlDatabase extends AbstractDatabase {
         internalDatabaseListeners.add(tableTag);
         internalDatabaseListeners.add(tableSessionUrl);
         internalDatabaseListeners.add(tableParam);
+        internalDatabaseListeners.add(tablePassiveScan);
         internalDatabaseListeners.add(tableContext);
         internalDatabaseListeners.add(tableStructure);
     }
@@ -182,6 +186,7 @@ public class SqlDatabase extends AbstractDatabase {
     public TableAlert getTableAlert() {
         return tableAlert;
     }
+
     /* (non-Javadoc)
      * @see org.parosproxy.paros.db.DatabaseIF#setTableAlert(org.parosproxy.paros.db.TableAlert)
      */
@@ -189,6 +194,7 @@ public class SqlDatabase extends AbstractDatabase {
     public void setTableAlert(TableAlert tableAlert) {
         this.tableAlert = tableAlert;
     }
+
     /* (non-Javadoc)
      * @see org.parosproxy.paros.db.DatabaseIF#getTableScan()
      */
@@ -196,6 +202,7 @@ public class SqlDatabase extends AbstractDatabase {
     public TableScan getTableScan() {
         return tableScan;
     }
+
     /* (non-Javadoc)
      * @see org.parosproxy.paros.db.DatabaseIF#setTableScan(org.parosproxy.paros.db.TableScan)
      */
@@ -245,6 +252,24 @@ public class SqlDatabase extends AbstractDatabase {
     @Override
     public TableParam getTableParam() {
         return tableParam;
+    }
+
+    // ZAP: Added method.
+    /* (non-Javadoc)
+     * @see org.parosproxy.paros.db.DatabaseIF#getTablePassiveScan()
+     */
+    @Override
+    public TablePassiveScan getTablePassiveScan() {
+        return tablePassiveScan;
+    }
+
+    // ZAP: Added method.
+    /* (non-Javadoc)
+     * @see org.parosproxy.paros.db.DatabaseIF#setTablePassiveScan(org.parosproxy.paros.db.TablePassiveScan)
+     */
+    @Override
+    public void setTablePassiveScan(TablePassiveScan tablePassiveScan) {
+        this.tablePassiveScan = tablePassiveScan;
     }
 
     /* (non-Javadoc)

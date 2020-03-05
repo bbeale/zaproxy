@@ -107,6 +107,12 @@ public interface Database {
     // ZAP: Added method.
     TableParam getTableParam();
 
+    // ZAP: Added method.
+    TablePassiveScan getTablePassiveScan();
+
+    // ZAP: Added method.
+    void setTablePassiveScan(TablePassiveScan tablePassiveScan);
+
     TableContext getTableContext();
 
     TableStructure getTableStructure();
