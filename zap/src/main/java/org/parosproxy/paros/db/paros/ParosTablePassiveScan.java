@@ -28,11 +28,14 @@
 // ZAP: 2019/06/05 Normalise format/style.
 package org.parosproxy.paros.db.paros;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.parosproxy.paros.db.DatabaseException;
 import org.parosproxy.paros.db.RecordPassiveScan;
 import org.parosproxy.paros.db.TablePassiveScan;
-
-import java.sql.*;
 
 public class ParosTablePassiveScan extends ParosAbstractTable implements TablePassiveScan {
 
