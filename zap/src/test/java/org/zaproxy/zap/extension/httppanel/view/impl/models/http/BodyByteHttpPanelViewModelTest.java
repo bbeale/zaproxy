@@ -24,13 +24,12 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.zip.GZIPOutputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.parosproxy.paros.network.HttpBody;
@@ -82,21 +81,9 @@ public abstract class BodyByteHttpPanelViewModelTest<T1 extends HttpHeader, T2 e
     }
 
     @Test
-    void shouldGetDataFromBody() {
+    void shouldGetDataFromBodyAsContent() {
         // Given
-        model.setMessage(message);
-        // When
-        byte[] data = model.getData();
-        // Then
-        assertThat(data, is(equalTo(BODY)));
-    }
-
-    @Test
-    void shouldGetDataFromBodyGzipDecoded() {
-        // Given
-        given(header.getHeader(HttpHeader.CONTENT_ENCODING)).willReturn("gzip");
-        given(body.getCharset()).willReturn(DEFAULT_CHARSET.name());
-        given(body.getBytes()).willReturn(gzip(BODY));
+        given(body.getContent()).willReturn(BODY);
         model.setMessage(message);
         // When
         byte[] data = model.getData();
@@ -113,41 +100,14 @@ public abstract class BodyByteHttpPanelViewModelTest<T1 extends HttpHeader, T2 e
     }
 
     @Test
-    void shouldSetDataIntoBody() {
+    void shouldSetDataIntoBodyAsContent() {
         // Given
         model.setMessage(message);
         byte[] otherBodyContent = "Other Body".getBytes(DEFAULT_CHARSET);
-        given(body.length()).willReturn(otherBodyContent.length);
         // When
         model.setData(otherBodyContent);
         // Then
-        verify(body).setBody(otherBodyContent);
-        verify(header).setContentLength(otherBodyContent.length);
-    }
-
-    @Test
-    void shouldSetDataIntoBodyGzipEncoded() {
-        // Given
-        model.setMessage(message);
-        given(header.getHeader(HttpHeader.CONTENT_ENCODING)).willReturn("gzip");
-        given(body.getCharset()).willReturn(DEFAULT_CHARSET.name());
-        byte[] otherBodyContent = "Other Body".getBytes(DEFAULT_CHARSET);
-        byte[] encodedBody = gzip(otherBodyContent);
-        given(body.length()).willReturn(encodedBody.length);
-        // When
-        model.setData(otherBodyContent);
-        // Then
-        verify(body).setBody(encodedBody);
-        verify(header).setContentLength(encodedBody.length);
-    }
-
-    private static byte[] gzip(byte[] value) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (GZIPOutputStream gis = new GZIPOutputStream(baos)) {
-            gis.write(value);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return baos.toByteArray();
+        verify(body).setContent(otherBodyContent);
+        verify(header, times(0)).setContentLength(anyInt());
     }
 }

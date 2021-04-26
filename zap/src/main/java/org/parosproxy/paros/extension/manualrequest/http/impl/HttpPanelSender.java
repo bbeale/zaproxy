@@ -30,7 +30,8 @@ import javax.net.ssl.SSLException;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import org.apache.commons.httpclient.URI;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.parosproxy.paros.Constant;
 import org.parosproxy.paros.control.Control;
 import org.parosproxy.paros.control.Control.Mode;
@@ -51,6 +52,7 @@ import org.zaproxy.zap.extension.httppanel.HttpPanel;
 import org.zaproxy.zap.extension.httppanel.HttpPanelRequest;
 import org.zaproxy.zap.extension.httppanel.HttpPanelResponse;
 import org.zaproxy.zap.extension.httppanel.Message;
+import org.zaproxy.zap.extension.httppanel.view.impl.models.http.HttpPanelViewModelUtils;
 import org.zaproxy.zap.model.SessionStructure;
 import org.zaproxy.zap.network.HttpRedirectionValidator;
 import org.zaproxy.zap.network.HttpRequestConfig;
@@ -58,7 +60,7 @@ import org.zaproxy.zap.network.HttpRequestConfig;
 /** Knows how to send {@link HttpMessage} objects. */
 public class HttpPanelSender implements MessageSender {
 
-    private static final Logger logger = Logger.getLogger(HttpPanelSender.class);
+    private static final Logger logger = LogManager.getLogger(HttpPanelSender.class);
 
     private final HttpPanelResponse responsePanel;
     private ExtensionHistory extension;
@@ -66,6 +68,7 @@ public class HttpPanelSender implements MessageSender {
 
     private HttpSender delegate;
 
+    private JToggleButton fixContentLength = null;
     private JToggleButton followRedirect = null;
     private JToggleButton useTrackingSessionState = null;
     private JToggleButton useCookies = null;
@@ -84,6 +87,8 @@ public class HttpPanelSender implements MessageSender {
         requestPanel.addOptions(getButtonUseCookies(), HttpPanel.OptionsLocation.AFTER_COMPONENTS);
         requestPanel.addOptions(
                 getButtonFollowRedirects(), HttpPanel.OptionsLocation.AFTER_COMPONENTS);
+        requestPanel.addOptions(
+                getButtonFixContentLength(), HttpPanel.OptionsLocation.AFTER_COMPONENTS);
         if (extAntiCSRF != null) {
             requestPanel.addOptions(getButtonUseCsrf(), HttpPanel.OptionsLocation.AFTER_COMPONENTS);
         }
@@ -98,6 +103,10 @@ public class HttpPanelSender implements MessageSender {
         final HttpMessage httpMessage = (HttpMessage) aMessage;
         // Reset the user before sending (e.g. Forced User mode sets the user, if needed).
         httpMessage.setRequestingUser(null);
+
+        if (getButtonFixContentLength().isSelected()) {
+            HttpPanelViewModelUtils.updateRequestContentLength(httpMessage);
+        }
         try {
             final ModeRedirectionValidator redirectionValidator = new ModeRedirectionValidator();
             boolean followRedirects = getButtonFollowRedirects().isSelected();
@@ -130,6 +139,7 @@ public class HttpPanelSender implements MessageSender {
                                 } else if (!redirectionValidator.isRequestValid()) {
                                     View.getSingleton()
                                             .showWarningDialog(
+                                                    responsePanel,
                                                     Constant.messages.getString(
                                                             "manReq.outofscope.redirection.warning",
                                                             redirectionValidator
@@ -174,7 +184,7 @@ public class HttpPanelSender implements MessageSender {
             if (extHistory != null) {
                 extHistory.addHistory(ref);
             }
-            SessionStructure.addPath(Model.getSingleton().getSession(), ref, httpMessage);
+            SessionStructure.addPath(Model.getSingleton(), ref, httpMessage);
         } catch (HttpMalformedHeaderException | DatabaseException e) {
             logger.warn("Failed to persist message sent:", e);
         }
@@ -298,6 +308,20 @@ public class HttpPanelSender implements MessageSender {
             useCsrf.setToolTipText(Constant.messages.getString("manReq.checkBox.useCSRF"));
         }
         return useCsrf;
+    }
+
+    private JToggleButton getButtonFixContentLength() {
+        if (fixContentLength == null) {
+            fixContentLength =
+                    new JToggleButton(
+                            new ImageIcon(
+                                    HttpPanelSender.class.getResource(
+                                            "/resource/icon/fugue/application-resize.png")),
+                            true);
+            fixContentLength.setToolTipText(
+                    Constant.messages.getString("manReq.checkBox.fixLength"));
+        }
+        return fixContentLength;
     }
 
     public void addPersistentConnectionListener(PersistentConnectionListener listener) {

@@ -15,6 +15,7 @@ plugins {
     org.zaproxy.zap.jflex
     org.zaproxy.zap.publish
     org.zaproxy.zap.spotless
+    org.zaproxy.zap.test
 }
 
 group = "org.zaproxy"
@@ -41,39 +42,42 @@ tasks.named<JacocoReport>("jacocoTestReport") {
 }
 
 dependencies {
-    api("com.fifesoft:rsyntaxtextarea:3.0.4")
+    api("com.fifesoft:rsyntaxtextarea:3.1.1")
     api("com.github.zafarkhaja:java-semver:0.9.0")
     api("commons-beanutils:commons-beanutils:1.9.4")
-    api("commons-codec:commons-codec:1.13")
+    api("commons-codec:commons-codec:1.15")
     api("commons-collections:commons-collections:3.2.2")
     api("commons-configuration:commons-configuration:1.10")
     api("commons-httpclient:commons-httpclient:3.1")
-    api("commons-io:commons-io:2.6")
+    api("commons-io:commons-io:2.8.0")
     api("commons-lang:commons-lang:2.6")
-    api("org.apache.commons:commons-lang3:3.9")
-    api("org.apache.commons:commons-text:1.8")
+    api("org.apache.commons:commons-lang3:3.11")
+    api("org.apache.commons:commons-text:1.9")
     api("edu.umass.cs.benchlab:harlib:1.1.2")
     api("javax.help:javahelp:2.0.05")
-    api("log4j:log4j:1.2.17")
+    val log4jVersion = "2.14.0"
+    api("org.apache.logging.log4j:log4j-api:$log4jVersion")
+    api("org.apache.logging.log4j:log4j-1.2-api:$log4jVersion")
+    implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     api("net.htmlparser.jericho:jericho-html:3.4")
     api("net.sf.json-lib:json-lib:2.4:jdk15")
-    api("org.apache.commons:commons-csv:1.7")
-    api("org.bouncycastle:bcmail-jdk15on:1.64")
-    api("org.bouncycastle:bcprov-jdk15on:1.64")
-    api("org.bouncycastle:bcpkix-jdk15on:1.64")
-    api("org.hsqldb:hsqldb:2.5.0")
-    api("org.jfree:jfreechart:1.0.19")
+    api("org.apache.commons:commons-csv:1.8")
+    val bcVersion = "1.67"
+    api("org.bouncycastle:bcmail-jdk15on:$bcVersion")
+    api("org.bouncycastle:bcprov-jdk15on:$bcVersion")
+    api("org.bouncycastle:bcpkix-jdk15on:$bcVersion")
+    api("org.hsqldb:hsqldb:2.5.1")
+    api("org.jfree:jfreechart:1.5.1")
     api("org.jgrapht:jgrapht-core:0.9.0")
     api("org.swinglabs.swingx:swingx-all:1.6.5-1")
-    api("org.xerial:sqlite-jdbc:3.28.0")
+    api("org.xerial:sqlite-jdbc:3.32.3.2")
 
-    implementation("commons-validator:commons-validator:1.6")
+    implementation("commons-validator:commons-validator:1.7")
     // Don't need its dependencies, for now.
     implementation("org.jitsi:ice4j:1.0") {
         setTransitive(false)
     }
-    implementation("org.javadelight:delight-nashorn-sandbox:0.1.26")
-    implementation("com.formdev:flatlaf:0.36")
+    implementation("com.formdev:flatlaf:0.45")
 
     runtimeOnly("commons-jxpath:commons-jxpath:1.3")
     runtimeOnly("commons-logging:commons-logging:1.2")
@@ -81,23 +85,22 @@ dependencies {
         setTransitive(false)
     }
 
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.25.1") {
+    testImplementation("com.github.tomakehurst:wiremock-jre8:2.27.2") {
         // Not needed.
         exclude(group = "org.junit")
     }
     testImplementation("org.hamcrest:hamcrest-all:1.3")
-    val jupiterVersion = "5.6.2"
+    val jupiterVersion = "5.7.0"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
-    testImplementation("org.mockito:mockito-junit-jupiter:3.1.0")
-    testImplementation("org.slf4j:slf4j-log4j12:1.7.28")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.6.28")
+    testImplementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
+    testImplementation("org.nanohttpd:nanohttpd-webserver:2.3.1")
 
     testRuntimeOnly(files(distDir))
-}
 
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
+    testGuiImplementation("org.assertj:assertj-swing:3.17.1")
 }
 
 tasks.register<JavaExec>("run") {
@@ -141,8 +144,30 @@ val japicmp by tasks.registering(JapicmpTask::class) {
         "org.zaproxy.zap.extension.httppanel.view.syntaxhighlight.lexers"
     )
 
+    fieldExcludes = listOf(
+        // Not part of the public API:
+        "org.zaproxy.zap.extension.autoupdate.AddOnsTableModel#logger",
+        "org.zaproxy.zap.extension.users.DialogAddUser#log",
+        "org.zaproxy.zap.ZAP#JERICHO_LOGGER_PROVIDER"
+    )
+
+    classExcludes = listOf(
+        "org.parosproxy.paros.db.paros.ParosTableAlert",
+        "org.parosproxy.paros.db.RecordAlert",
+        "org.zaproxy.zap.db.sql.SqlTableAlert",
+        "org.zaproxy.zap.extension.log4j.ZapOutputWriter",
+        "org.zaproxy.zap.extension.script.PacScript"
+    )
+
     methodExcludes = listOf(
-        "org.parosproxy.paros.network.HttpMessage#getParamNameSet(org.parosproxy.paros.network.HtmlParameter\$Type,java.lang.String)"
+        "org.parosproxy.paros.network.HttpMessage#getParamNameSet(org.parosproxy.paros.network.HtmlParameter\$Type,java.lang.String)",
+        "org.parosproxy.paros.core.scanner.Variant#getLeafName(java.lang.String,org.parosproxy.paros.network.HttpMessage)",
+        "org.parosproxy.paros.core.scanner.Variant#getTreePath(org.parosproxy.paros.network.HttpMessage)",
+        "org.parosproxy.paros.core.scanner.VariantScript#getLeafName(org.parosproxy.paros.core.scanner.VariantCustom,java.lang.String,org.parosproxy.paros.network.HttpMessage)",
+        "org.parosproxy.paros.core.scanner.VariantScript#getTreePath(org.parosproxy.paros.core.scanner.VariantCustom,org.parosproxy.paros.network.HttpMessage)",
+        "org.parosproxy.paros.db.TableAlert#write(int,int,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,int,int,int)",
+        "org.zaproxy.zap.CommandLineBootstrap#getLogger()",
+        "org.zaproxy.zap.model.ParameterParser#parseRawParameters(java.lang.String)"
     )
 
     richReport {

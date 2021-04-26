@@ -163,6 +163,8 @@ Scanners:
 40034   .env File Scanner
 40035   Hidden File Scanner
 40036   JWT Scanner
+40037   CustomActiveScanForZAP (3rd Party)
+40038   Bypassing 403
 
 50000   Active Scan scripts
 50001   Passive Scan scripts
@@ -181,6 +183,7 @@ Scanners:
 90001   Insecure JSF ViewState
 90002   Java Serialized Object
 90003   Subresource Integrity Attribute Missing
+90004   Cross-Origin Resource Policy
 90011   Charset Mismatch
 90017	XSLT Injection
 90018   SQL Injection SQLMap
